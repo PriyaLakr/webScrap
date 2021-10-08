@@ -1,3 +1,4 @@
+## Adapted from tutorial: https://www.youtube.com/watch?v=s8XjEuplx_U 
 # Task: Extract information from a web page and automatically send an email
 
 
