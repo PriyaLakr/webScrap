@@ -62,12 +62,14 @@ with open(f"{author}_papers.text", 'w') as f:
 
 print(f"{author}_papers.text file stored in {os.getcwd()} directory")
 
-# ======== check below lines of code ===================
+
 # automated mail the text file 
 import requests
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
 import datetime
 
 
@@ -87,8 +89,19 @@ msg['Subject'] = '[Automated] Hacked your account' + str(now.day) + '/' + str(no
 msg['From'] = FROM
 msg['To'] = TO
 
-msg.attach(MIMEText(content, 'html'))
+file = f"{author}_papers.text"
+msg.attach(MIMEText("List of papers is attached as a separate text file with this mail!"))
 
+with open(file, "rb") as attachment:
+    part = MIMEBase("application", "octet-stream")
+    part.set_payload(attachment.read())
+    
+encoders.encode_base64(part)
+
+part.add_header(
+    "Content-Disposition",
+    "attachment", filename= filename)
+msg.attach(part)
 
 ## initializing server
 server = smtplib.SMTP(SERVER, PORT)
@@ -104,3 +117,4 @@ server.sendmail(FROM, TO, msg.as_string())
 print('email sent....')
 
 server.quit()
+
